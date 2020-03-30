@@ -231,7 +231,7 @@ class VelocityPlanner:
             for i in reversed(range(stop_index)):
                 dist = np.linalg.norm([path[0][i+1] - path[0][i],
                                        path[1][i+1] - path[1][i]])
-                vi = calc_final_speed(vf, -self._a_max, dist)
+                vi = calc_final_speed(vf, self._a_max, dist)
                 # We don't want to have points above the starting speed
                 # along our profile, so clamp to start_speed.
                 if vi > start_speed:
@@ -441,7 +441,8 @@ class VelocityPlanner:
         # At the end of the ramp, we will maintain our final speed.
         ramp_end_index = 0
         distance = 0.0
-        while (ramp_end_index < len(path[0])-1) and (distance < accel_distance):
+
+        while (ramp_end_index < (len(path[0]) - 1)) and (distance < accel_distance):
             distance += np.linalg.norm([path[0][ramp_end_index+1] - path[0][ramp_end_index],
                                         path[1][ramp_end_index+1] - path[1][ramp_end_index]])
             ramp_end_index += 1
@@ -498,7 +499,7 @@ def calc_distance(v_i, v_f, a):
     # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
     # ------------------------------------------------------------------
     d = (v_f**2 - v_i**2)/(2 * a)
-    # return d
+    return d
     # ------------------------------------------------------------------
 
 ######################################################
@@ -528,6 +529,10 @@ def calc_final_speed(v_i, a, d):
 
     # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
     # ------------------------------------------------------------------
-    v_f = sqrt(v_i**2 + 2 * a * d)
+    discriminant = (v_i**2) + (2 * a * d)
+    if discriminant > 0.0:
+        v_f = np.sqrt(discriminant)
+    else:
+        v_f = 0.0
     return v_f
     # ------------------------------------------------------------------

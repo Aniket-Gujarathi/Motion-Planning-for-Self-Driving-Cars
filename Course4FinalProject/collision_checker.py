@@ -82,8 +82,8 @@ class CollisionChecker:
 
                 # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                 # --------------------------------------------------------------
-                circle_locations[:, 0] = path[j][0] + self._circle_offsets*cos(path[j][2])
-                circle_locations[:, 1] = path[j][1] + self._circle_offsets*sin(path[j][2])
+                circle_locations[:, 0] = path[0][j] + [i*int(cos(path[2][j])) for i in self._circle_offsets]
+                circle_locations[:, 1] = path[1][j] + [i*int(sin(path[2][j])) for i in self._circle_offsets]
                 # --------------------------------------------------------------
 
                 # Assumes each obstacle is approximated by a collection of
@@ -164,7 +164,7 @@ class CollisionChecker:
                 # A lower score implies a more suitable path.
                 # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                 # --------------------------------------------------------------
-                score = np.sqrt((goal_state[0] - paths[i][0][len(paths) - 1])**2 + (goal_state[1] - paths[i][1][len(paths) - 1])**2)
+                score = np.sqrt((goal_state[0] - paths[i][0][len(paths[i][0]) - 1])**2 + (goal_state[1] - paths[i][1][len(paths[i][1]) - 1])**2)
                 # --------------------------------------------------------------
 
                 # Compute the "proximity to other colliding paths" score and

@@ -87,7 +87,7 @@ class LocalPlanner:
         # consecutive waypoints, then use the np.arctan2() function.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        if goal_index != len(waypoints) + 1:
+        if goal_index != len(waypoints) - 1:
             delta_x = waypoints[goal_index + 1][0] - waypoints[goal_index][0]
             delta_y = waypoints[goal_index + 1][1] - waypoints[goal_index][1]
             heading = np.arctan2(delta_y, delta_x)
@@ -117,15 +117,15 @@ class LocalPlanner:
         # current yaw corresponds to theta = 0 in the new local frame.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        goal_x = goal_state_local[0]*cos(ego_state[2]) + goal_state_local[1]*sin(ego_state[2])
-        goal_y = -goal_state_local[0]*sin(ego_state[2]) + goal_state_local[1]*sin(ego_state[2])
+        goal_x = goal_state_local[0]*np.cos(ego_state[2]) + goal_state_local[1]*np.sin(ego_state[2])
+        goal_y = -goal_state_local[0]*np.sin(ego_state[2]) + goal_state_local[1]*np.cos(ego_state[2])
         # ------------------------------------------------------------------
 
         # Compute the goal yaw in the local frame by subtracting off the
         # current ego yaw from the heading variable.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        goal_t = goal_state_local[2] - ego_state[2]
+        goal_t = heading - ego_state[2]
         # ------------------------------------------------------------------
 
         # Velocity is preserved after the transformation.

@@ -11,6 +11,7 @@ import numpy as np
 import scipy.optimize
 import scipy.integrate
 from math import sin, cos, pi, sqrt
+import sys
 
 class PathOptimizer:
     def __init__(self):
@@ -64,7 +65,7 @@ class PathOptimizer:
         # Since we already set p0 and p4 (being the curvature of
         # the initial and final points) to be zero.
         p0 = [0.0, 0.0, sf_0]
-
+        max = sys.maxsize
         # Here we will set the bounds [lower, upper] for each optimization
         # variable.
         # The first two variables correspond to the curvature 1/3rd of the
@@ -74,7 +75,7 @@ class PathOptimizer:
         # has a lower limit of the straight line arc length.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        bounds = [(-0.5, 0.5), (-0.5, 0.5), (sf_0, np.inf)]
+        bounds = [(-0.5, 0.5), (-0.5, 0.5), (sf_0, max)]
         # ------------------------------------------------------------------
 
         # Here we will call scipy.optimize.minimize to optimize our spiral.
@@ -84,7 +85,7 @@ class PathOptimizer:
         # optimization methods.
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        res = scipy.optimize.minimize(self.objective, p0, method = 'L-BFGS-B', jac = self.objective_grad, constraints = bounds, options = {'True'})
+        res = scipy.optimize.minimize(fun=self.objective, x0=p0, method = 'L-BFGS-B', jac = self.objective_grad, bounds = bounds)
         # ------------------------------------------------------------------
 
         spiral = self.sample_spiral(res.x)
@@ -116,9 +117,7 @@ class PathOptimizer:
         # ------------------------------------------------------------------
         # # Remember that a, b, c, d and s are lists
         # ...
-        print(a)
-        thetas = []
-        thetas.append(np.multiply(a, s), np.multiply(b/2, s**2), np.multiply(c/3, s**3), np.multiply(d/4, s**4))
+        thetas = s*a + (b/2)*(s**2) + (c/3)*(s**3) + (d/4)*(s**4)
         return thetas
         # ------------------------------------------------------------------
 
@@ -174,8 +173,8 @@ class PathOptimizer:
         # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
         t_points = self.thetaf(a, b, c, d, s_points)
-        x_points = scipy.integrate.cumtrapz(cos(theta(t_points)), s_points)
-        y_points = scipy.integrate.cumtrapz(sin(theta(t_points)), s_points)
+        x_points = scipy.integrate.cumtrapz(np.cos(t_points), s_points, initial=None)
+        y_points = scipy.integrate.cumtrapz(np.sin(t_points), s_points, initial=None)
         return [x_points, y_points, t_points]
         # ------------------------------------------------------------------
 
